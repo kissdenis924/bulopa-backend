@@ -1,15 +1,21 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const cors = require('cors');
 
-// Load environment variables from .env file
+// Load environment variables
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
+app.use(cors());
 app.use(express.json());
+
+// Register dashboard route
+const dashboardRoutes = require('./routes/dashboard');
+app.use('/dashboard', dashboardRoutes);
 
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URI, {
@@ -19,7 +25,7 @@ mongoose.connect(process.env.MONGO_URI, {
 .then(() => console.log('✅ Connected to MongoDB'))
 .catch((err) => console.error('❌ MongoDB connection error:', err));
 
-// Sample route
+// Root route
 app.get('/', (req, res) => {
   res.send('🚀 Bulopa backend is running');
 });
